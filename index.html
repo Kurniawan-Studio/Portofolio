@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Neo Kurniawan Samen — Frontend Engineer</title>
+<meta name="description" content="Independent frontend engineer specializing in React, Next.js, and design systems." />
+<meta property="og:title" content="Neo Kurniawan Samen — Frontend Engineer" />
+<meta property="og:description" content="Independent frontend engineer specializing in React, Next.js, and design systems." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090B; --surface:#111113; --hover:#161619;
+  --text:#F4F4F5; --text-2:#8E8E93; --muted:#52525B;
+  --accent:#38BDF8;
+  --border:rgba(255,255,255,0.07); --border-hi:rgba(255,255,255,0.14);
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;border-color:var(--border);min-width:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:inherit}
+img,svg{display:block;max-width:100%}
+::selection{background:rgba(56,189,248,0.25);color:var(--text)}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#27272A;border-radius:0}
+::-webkit-scrollbar-thumb:hover{background:#3F3F46}
+
+.container{width:100%;max-width:1040px;margin:0 auto;padding-left:20px;padding-right:20px}
+@media(min-width:640px){.container{padding-left:24px;padding-right:24px}}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* NAV */
+.nav{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid transparent;
+  background:rgba(9,9,11,0.4);
+  transition:border-color .3s var(--ease),background .3s var(--ease);
+}
+.nav.scrolled{border-bottom-color:var(--border);background:rgba(9,9,11,0.85)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
+@media(min-width:768px){.nav-inner{height:64px;gap:16px}}
+.nav-left{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:-0.01em;flex-shrink:0}
+.monogram{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:28px;height:28px;border:1px solid rgba(255,255,255,0.1);
+  font-size:10.5px;font-weight:600;letter-spacing:0.05em;flex-shrink:0;
+}
+.nav-left .name{color:var(--text-2);display:none}
+@media(min-width:480px){.nav-left .name{display:inline}}
+.nav-left .time{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);display:none;white-space:nowrap}
+@media(min-width:900px){.nav-left .time{display:inline}}
+.nav-links{display:none;gap:28px;font-size:13.5px;color:var(--text-2)}
+.nav-links a{transition:color .3s var(--ease);white-space:nowrap}
+.nav-links a:hover{color:var(--text)}
+@media(min-width:768px){.nav-links{display:flex}}
+.availability{
+  display:flex;align-items:center;gap:8px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.02);
+  padding:5px 10px;border-radius:999px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--text-2);flex-shrink:0;white-space:nowrap;
+}
+@media(min-width:640px){.availability{padding:6px 12px;font-size:10px;gap:10px}}
+.dot{position:relative;display:inline-flex;width:6px;height:6px;flex-shrink:0}
+.dot::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 2s cubic-bezier(0,0,.2,1) infinite;opacity:.6}
+.dot::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent)}
+@keyframes ping{75%,100%{transform:scale(2.2);opacity:0}}
+.avail-full{display:none}
+.avail-short{display:inline}
+@media(min-width:640px){.avail-full{display:inline}.avail-short{display:none}}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;opacity:0.4;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,0.03) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,0.03) 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);
+  mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);
+}
+.hero-inner{position:relative;padding:64px 0}
+@media(min-width:768px){.hero-inner{padding:112px 0}}
+@media(min-width:1024px){.hero-inner{padding:144px 0}}
+.eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:28px;flex-wrap:wrap}
+.eyebrow-line{width:28px;height:1px;background:rgba(255,255,255,0.2);flex-shrink:0}
+.eyebrow-text{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  text-transform:uppercase;letter-spacing:0.18em;color:var(--text-2);
+}
+h1{
+  max-width:820px;
+  font-size:clamp(1.9rem,7vw,3.75rem);
+  font-weight:600;line-height:1.08;letter-spacing:-0.03em;
+}
+h1 span{color:var(--text-2)}
+.hero-sub{
+  margin-top:28px;max-width:560px;color:var(--text-2);
+  font-size:15px;line-height:1.7;
+}
+@media(min-width:768px){.hero-sub{font-size:16px;margin-top:32px}}
+.hero-actions{
+  margin-top:36px;
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+}
+@media(min-width:768px){.hero-actions{margin-top:40px;gap:12px}}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  height:44px;padding:0 18px;
+  font-size:13.5px;font-weight:500;
+  transition:all .3s var(--ease);border-radius:0;
+  white-space:nowrap;flex-shrink:0;
+}
+@media(min-width:640px){.btn{padding:0 22px;font-size:14px;gap:10px}}
+.btn-primary{background:var(--text);color:var(--bg)}
+.btn-primary:hover{background:#fff}
+.btn-primary svg{transition:transform .3s var(--ease)}
+.btn-primary:hover svg{transform:translate(2px,-2px)}
+.btn-secondary{border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--text)}
+.btn-secondary:hover{border-color:var(--border-hi);background:rgba(255,255,255,0.03)}
+.btn-secondary svg{color:var(--text-2);transition:color .3s var(--ease);flex-shrink:0}
+.btn-secondary:hover svg{color:var(--text)}
+.btn-secondary.copied{border-color:rgba(56,189,248,0.4)}
+.btn-secondary.copied svg{color:var(--accent)}
+.btn-secondary.copied .email-text{color:var(--accent)}
+.email-text{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;
+  letter-spacing:-0.01em;overflow:hidden;text-overflow:ellipsis;
+  max-width:180px;
+}
+@media(min-width:480px){.email-text{font-size:12px;max-width:220px}}
+.hero-social{
+  display:flex;align-items:center;gap:16px;
+  margin-top:36px;padding-top:24px;
+  border-top:1px solid var(--border);flex-wrap:wrap;
+}
+@media(min-width:768px){.hero-social{margin-top:40px;gap:20px}}
+.hero-social-label{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);
+  flex-shrink:0;
+}
+.hero-social-links{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+@media(min-width:640px){.hero-social-links{gap:18px}}
+.hero-social-links a{
+  color:var(--text-2);transition:color .3s var(--ease);
+  display:flex;align-items:center;gap:4px;font-size:11px;
+}
+.hero-social-links a:hover{color:var(--text)}
+.hero-social-links .mono{font-size:10.5px}
+
+/* SECTIONS */
+section{border-bottom:1px solid var(--border)}
+.section-inner{padding:64px 0}
+@media(min-width:768px){.section-inner{padding:96px 0}}
+@media(min-width:1024px){.section-inner{padding:120px 0}}
+.section-head{margin-bottom:40px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+@media(min-width:768px){.section-head{margin-bottom:52px;padding-bottom:24px}}
+.section-head-flex{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.section-title{
+  font-size:clamp(1.35rem,4.5vw,1.875rem);
+  font-weight:600;letter-spacing:-0.02em;margin-top:8px;
+}
+.section-meta{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  color:var(--muted);white-space:nowrap;
+}
+
+/* WORK */
+.work-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:768px){.work-grid{grid-template-columns:repeat(2,1fr);gap:20px}.work-grid .card:first-child{grid-column:span 2}}
+.card{
+  position:relative;overflow:hidden;
+  border:1px solid var(--border);background:var(--surface);
+  transition:background .3s var(--ease),border-color .3s var(--ease);
+  display:flex;flex-direction:column;
+}
+.card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:0;
+  transition:opacity .5s var(--ease);
+  background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,0.03),transparent 40%);
+}
+.card:hover{border-color:var(--border-hi);background:var(--hover)}
+.card:hover::before{opacity:1}
+.card>*{position:relative;z-index:1}
+.card-top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);
+  flex-wrap:wrap;
+}
+@media(min-width:640px){.card-top{padding:14px 20px;font-size:10px;gap:12px}}
+.card-top .idx{color:var(--text);flex-shrink:0}
+.card-top .cat{color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-top .links{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.card-top .links a{
+  color:var(--text-2);transition:color .3s var(--ease);
+  display:flex;align-items:center;gap:4px;
+}
+.card-top .links a:hover{color:var(--text)}
+.live-badge{display:flex;align-items:center;gap:5px;color:var(--accent)}
+.preview{
+  height:200px;width:100%;overflow:hidden;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,#0d0d10,#09090b);
+  position:relative;
+}
+@media(min-width:640px){.preview{height:260px}}
+@media(min-width:768px){.preview{height:300px}}
+.preview-inner{height:100%;width:100%;padding:14px;transition:transform .5s var(--ease)}
+@media(min-width:640px){.preview-inner{padding:16px}}
+.card:hover .preview-inner{transform:scale(1.015)}
+.mock-bar{display:flex;align-items:center;gap:5px;margin-bottom:8px}
+.mock-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.1);flex-shrink:0}
+.mock-url{
+  flex:1;margin-left:8px;padding:4px 8px;
+  background:rgba(255,255,255,0.03);
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  min-width:0;
+}
+.mock-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;height:calc(100% - 28px)}
+.mock-side{
+  grid-column:span 3;border-right:1px solid rgba(255,255,255,0.04);
+  padding-right:6px;display:flex;flex-direction:column;gap:5px;
+}
+.mock-main{grid-column:span 9;display:flex;flex-direction:column;gap:5px}
+.mock-block{background:rgba(255,255,255,0.02)}
+.mock-block.lg{background:rgba(255,255,255,0.04);height:20px}
+.card-body{flex:1;display:flex;flex-direction:column;padding:18px}
+@media(min-width:768px){.card-body{padding:24px}}
+.card-title{
+  font-size:1.05rem;font-weight:600;letter-spacing:-0.02em;color:var(--text);
+}
+@media(min-width:768px){.card-title{font-size:1.2rem}}
+.card-desc{margin-top:8px;font-size:13.5px;line-height:1.65;color:var(--text-2)}
+@media(min-width:768px){.card-desc{font-size:14px}}
+.card-dl{margin-top:22px;display:grid;gap:14px}
+@media(min-width:640px){.card-dl{grid-template-columns:repeat(3,1fr);gap:16px}}
+.card-dl dt{
+  margin-bottom:6px;font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);
+}
+.card-dl dd{font-size:12.5px;line-height:1.6;color:var(--text-2)}
+@media(min-width:768px){.card-dl dd{font-size:13px}}
+.stack{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:22px;
+  padding-top:16px;border-top:1px solid var(--border);
+}
+.pill{
+  padding:3px 7px;border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.02);
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  letter-spacing:-0.01em;color:var(--text-2);white-space:nowrap;
+}
+@media(min-width:640px){.pill{padding:4px 8px;font-size:10px}}
+.live-link{
+  display:flex;align-items:center;gap:4px;color:var(--accent);
+}
+.live-link:hover{color:#7DD3FC}
+
+/* CAPABILITIES */
+.cap-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:768px){.cap-grid{grid-template-columns:repeat(3,1fr);gap:20px}}
+.cap-card{
+  position:relative;overflow:hidden;
+  border:1px solid var(--border);background:var(--surface);
+  padding:20px;transition:background .3s var(--ease),border-color .3s var(--ease);
+  display:flex;flex-direction:column;height:100%;
+}
+@media(min-width:768px){.cap-card{padding:24px}}
+.cap-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:0;
+  transition:opacity .5s var(--ease);
+  background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,0.03),transparent 40%);
+}
+.cap-card:hover{border-color:var(--border-hi);background:var(--hover)}
+.cap-card:hover::before{opacity:1}
+.cap-card>*{position:relative;z-index:1}
+.cap-top{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:8px;padding-bottom:14px;border-bottom:1px solid var(--border);flex-wrap:wrap;
+}
+.cap-idx,.cap-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted)}
+.cap-tag{font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em}
+.cap-title{margin-top:18px;font-size:15px;font-weight:600;letter-spacing:-0.01em}
+.cap-body{margin-top:10px;flex:1;font-size:13px;line-height:1.65;color:var(--text-2)}
+@media(min-width:768px){.cap-body{font-size:13.5px}}
+.cap-stack{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:20px;
+  padding-top:16px;border-top:1px solid var(--border);
+}
+
+/* CONTACT */
+.contact-heading{
+  max-width:820px;
+  font-size:clamp(1.6rem,6vw,3rem);
+  font-weight:600;line-height:1.1;letter-spacing:-0.03em;
+}
+.contact-heading span{color:var(--muted)}
+.contact-sub{
+  margin-top:18px;max-width:560px;color:var(--text-2);
+  font-size:14.5px;line-height:1.7;
+}
+@media(min-width:768px){.contact-sub{margin-top:20px;font-size:15px}}
+.contact-actions{
+  margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+}
+@media(min-width:768px){.contact-actions{margin-top:40px;gap:12px}}
+.footer{
+  margin-top:64px;padding-top:28px;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:20px;
+}
+@media(min-width:640px){.footer{margin-top:80px;padding-top:32px;flex-direction:row;align-items:center;justify-content:space-between;gap:24px}}
+.footer-links{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+@media(min-width:640px){.footer-links{gap:16px}}
+.footer-links a{
+  color:var(--text-2);transition:color .3s var(--ease);
+  display:flex;align-items:center;gap:4px;flex-shrink:0;
+}
+.footer-links a:hover{color:var(--text)}
+.footer-links .mono{font-size:10.5px}
+.copyright{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  text-transform:uppercase;letter-spacing:0.16em;color:var(--muted);
+  line-height:1.5;
+}
+@media(min-width:640px){.copyright{font-size:10px;letter-spacing:0.18em;text-align:right}}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+  .dot::after{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#top" class="nav-left">
+      <span class="monogram">NKS</span>
+      <span class="name">Neo</span>
+      <span class="time mono" id="clock">--:--</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="availability">
+      <span class="dot"></span>
+      <span class="avail-full">Available for Q4 Freelance</span>
+      <span class="avail-short">Available</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-grid"></div>
+  <div class="container hero-inner">
+    <div class="eyebrow reveal">
+      <span class="eyebrow-line"></span>
+      <span class="eyebrow-text">Frontend Engineer — Independent</span>
+    </div>
+    <h1 class="reveal" style="transition-delay:80ms">
+      Frontend Engineer.<br>
+      <span>Architecting fast, resilient interfaces for ambitious startups.</span>
+    </h1>
+    <p class="hero-sub reveal" style="transition-delay:160ms">
+      Independent freelance specialist focused on React, Next.js, and design systems. Zero agency bloat — direct execution from architecture to production.
+    </p>
+    <div class="hero-actions reveal" style="transition-delay:240ms">
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=neoawandev@gmail.com&su=Project%20Inquiry" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        Start a Project
+      </a>
+      <button class="btn btn-secondary" id="copy-btn" aria-label="Copy email to clipboard">
+        <svg id="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span class="email-text" id="copy-text">neoawandev@gmail.com</span>
+      </button>
+    </div>
+    <div class="hero-social reveal" style="transition-delay:320ms">
+      <span class="hero-social-label">Reach —</span>
+      <div class="hero-social-links">
+        <a href="https://github.com/kurniawan-studio" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        </a>
+        <a href="https://discord.gg/3FT5XyUJd" target="_blank" rel="noreferrer noopener" aria-label="Discord">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"></circle><circle cx="15" cy="12" r="1"></circle><path d="M7.5 7.5C10 6 14 6 16.5 7.5m-9 9C10 18 14 18 16.5 16.5M7.5 7.5C6 10 5.5 14 6 16.5m10.5-9C18 10 18.5 14 18 16.5"></path></svg>
+        </a>
+        <a href="https://tiktok.com/@neokurniawansamenraaf" target="_blank" rel="noreferrer noopener" aria-label="TikTok">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+        </a>
+        <a href="https://www.youtube.com/@NeoKurniawanSamenRaaf" target="_blank" rel="noreferrer noopener" aria-label="YouTube">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORK ============ -->
+<section id="work">
+  <div class="container section-inner">
+    <div class="section-head reveal">
+      <div class="eyebrow">
+        <span class="eyebrow-line" style="width:22px"></span>
+        <span class="eyebrow-text">Selected Work</span>
+      </div>
+      <div class="section-head-flex">
+        <h2 class="section-title">Case Studies</h2>
+        <span class="section-meta">[03] ENTRIES</span>
+      </div>
+    </div>
+    <div class="work-grid">
+
+      <!-- ===== PROJECT 01: SelfLearn ===== -->
+      <article class="card reveal">
+        <div class="card-top">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span class="idx">[01]</span>
+            <span class="cat">EDTECH / LEARNING PLATFORM</span>
+            <span style="color:var(--muted)">/ 2025</span>
+          </div>
+          <div class="links">
+            <a href="https://kurniawan-studio.github.io/SelfLearn/" target="_blank" rel="noreferrer noopener" class="live-link">
+              <span class="dot" style="transform:scale(.8)"></span>
+              <span>Live</span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+          </div>
+        </div>
+        <div class="preview"><div class="preview-inner">
+          <div class="mock-bar">
+            <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+            <span class="mock-url">selflearn</span>
+          </div>
+          <div class="mock-grid">
+            <div class="mock-side">
+              <div class="mock-block lg"></div>
+              <div class="mock-block" style="height:12px"></div>
+              <div class="mock-block" style="height:12px;opacity:.75"></div>
+              <div class="mock-block" style="height:12px;opacity:.55"></div>
+              <div class="mock-block" style="height:12px;opacity:.35"></div>
+            </div>
+            <div class="mock-main">
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">
+                <div class="mock-block" style="height:32px;padding:6px"><div style="height:3px;width:60%;background:rgba(255,255,255,0.06)"></div></div>
+                <div class="mock-block" style="height:32px;padding:6px"><div style="height:3px;width:60%;background:rgba(255,255,255,0.06)"></div></div>
+                <div class="mock-block" style="height:32px;padding:6px"><div style="height:3px;width:60%;background:rgba(255,255,255,0.06)"></div></div>
+              </div>
+              <div class="mock-block" style="height:56px"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+                <div class="mock-block" style="height:28px"></div>
+                <div class="mock-block" style="height:28px"></div>
+              </div>
+            </div>
+          </div>
+        </div></div>
+        <div class="card-body">
+          <h3 class="card-title">SelfLearn</h3>
+          <p class="card-desc">A self-directed learning platform built for focused, distraction-free study. Ships with a clean interface, curated material, and zero onboarding friction.</p>
+          <dl class="card-dl">
+            <div><dt>Challenge</dt><dd>Cut through the noise of bloated edtech platforms with a fast, focused interface that respects the learner's time.</dd></div>
+            <div><dt>Architecture</dt><dd>Static-first architecture on GitHub Pages with modular vanilla JS components and progressive enhancement.</dd></div>
+            <div><dt>Measured Impact</dt><dd>Zero runtime dependencies, sub-second first paint, live and in production.</dd></div>
+          </dl>
+          <div class="stack">
+            <span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">JavaScript</span><span class="pill">GitHub Pages</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===== PROJECT 02: Rancang.AI ===== -->
+      <article class="card reveal" style="transition-delay:80ms">
+        <div class="card-top">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span class="idx">[02]</span>
+            <span class="cat">AI TOOL / DESIGN</span>
+            <span style="color:var(--muted)">/ 2025</span>
+          </div>
+          <div class="links">
+            <a href="https://kurniawan-studio.github.io/Rancang.AI/" target="_blank" rel="noreferrer noopener" class="live-link">
+              <span class="dot" style="transform:scale(.8)"></span>
+              <span>Live</span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+          </div>
+        </div>
+        <div class="preview"><div class="preview-inner">
+          <div class="mock-bar">
+            <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+            <span class="mock-url">rancang-ai</span>
+          </div>
+          <div class="mock-grid">
+            <div class="mock-side">
+              <div class="mock-block lg"></div>
+              <div class="mock-block" style="height:12px"></div>
+              <div class="mock-block" style="height:12px;opacity:.75"></div>
+            </div>
+            <div class="mock-main">
+              <div class="mock-block" style="height:56px"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+                <div class="mock-block" style="height:28px"></div>
+                <div class="mock-block" style="height:28px"></div>
+              </div>
+              <div class="mock-block" style="height:20px"></div>
+            </div>
+          </div>
+        </div></div>
+        <div class="card-body">
+          <h3 class="card-title">Rancang.AI</h3>
+          <p class="card-desc">An AI-assisted design and planning tool that turns prompts into structured design direction. Built for creators who need speed without sacrificing intent.</p>
+          <dl class="card-dl">
+            <div><dt>Challenge</dt><dd>Make AI-driven design assistance feel purposeful instead of generic — output that respects taste and intent.</dd></div>
+            <div><dt>Architecture</dt><dd>Lightweight client-side tool with API integration, static deployment, and a minimal interface focused on the input.</dd></div>
+            <div><dt>Measured Impact</dt><dd>Live, deployed, and iterating based on direct user feedback.</dd></div>
+          </dl>
+          <div class="stack">
+            <span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">JavaScript</span><span class="pill">AI API</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===== PROJECT 03: Open Slot ===== -->
+      <article class="card reveal" style="transition-delay:160ms">
+        <div class="card-top">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span class="idx">[03]</span>
+            <span class="cat">OPEN SLOT / Q4 2025</span>
+            <span style="color:var(--muted)">/ 2025</span>
+          </div>
+          <div class="links"></div>
+        </div>
+        <div class="preview"><div class="preview-inner">
+          <div class="mock-bar">
+            <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+            <span class="mock-url">your-project</span>
+          </div>
+          <div class="mock-grid">
+            <div class="mock-side">
+              <div class="mock-block lg"></div>
+              <div class="mock-block" style="height:12px"></div>
+              <div class="mock-block" style="height:12px;opacity:.75"></div>
+            </div>
+            <div class="mock-main">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px">
+                <div class="mock-block" style="height:28px"></div>
+                <div class="mock-block" style="height:28px"></div>
+                <div class="mock-block" style="height:28px"></div>
+              </div>
+              <div class="mock-block" style="height:44px"></div>
+              <div class="mock-block" style="height:28px"></div>
+            </div>
+          </div>
+        </div></div>
+        <div class="card-body">
+          <h3 class="card-title">Your Project</h3>
+          <p class="card-desc">One slot remaining for Q4 freelance engagement. Fixed-scope or retainer, direct async collaboration with the engineer building it.</p>
+          <dl class="card-dl">
+            <div><dt>Challenge</dt><dd>Ship a fast, resilient, production-ready interface without agency overhead or handoff friction.</dd></div>
+            <div><dt>Architecture</dt><dd>Scoped directly with the founder, weekly milestones, Loom walkthroughs, clean Git history.</dd></div>
+            <div><dt>Measured Impact</dt><dd>Available to start immediately upon contract.</dd></div>
+          </dl>
+          <div class="stack">
+            <span class="pill">Next.js</span><span class="pill">TypeScript</span><span class="pill">Your Stack</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAPABILITIES ============ -->
+<section id="capabilities">
+  <div class="container section-inner">
+    <div class="section-head reveal">
+      <div class="eyebrow">
+        <span class="eyebrow-line" style="width:22px"></span>
+        <span class="eyebrow-text">Capabilities &amp; Engagement</span>
+      </div>
+      <h2 class="section-title">How I work with founders</h2>
+    </div>
+    <div class="cap-grid">
+      <div class="cap-card reveal">
+        <div class="cap-top"><span class="cap-idx">01</span><span class="cap-tag">/ Frontend</span></div>
+        <h3 class="cap-title">Frontend Architecture</h3>
+        <p class="cap-body">Scalable React and Next.js applications with strict TypeScript, deliberate state management, and measurable performance budgets. Built to survive real users and real growth.</p>
+        <div class="cap-stack">
+          <span class="pill">React</span><span class="pill">Next.js</span><span class="pill">TypeScript</span>
+        </div>
+      </div>
+      <div class="cap-card reveal" style="transition-delay:80ms">
+        <div class="cap-top"><span class="cap-idx">02</span><span class="cap-tag">/ Design</span></div>
+        <h3 class="cap-title">Design Engineering</h3>
+        <p class="cap-body">Pixel-accurate implementation of complex UI with a designer's eye and an engineer's discipline. Custom component libraries, accessible micro-interactions, responsive Swiss grids.</p>
+        <div class="cap-stack">
+          <span class="pill">Tailwind CSS</span><span class="pill">Design Systems</span><span class="pill">A11y</span>
+        </div>
+      </div>
+      <div class="cap-card reveal" style="transition-delay:160ms">
+        <div class="cap-top"><span class="cap-idx">03</span><span class="cap-tag">/ Process</span></div>
+        <h3 class="cap-title">Async-First Execution</h3>
+        <p class="cap-body">Built for founders operating across timezones. Clear weekly milestones, transparent pricing, clean Git commits, and Loom walkthroughs instead of status meetings.</p>
+        <div class="cap-stack">
+          <span class="pill">Fixed-Scope</span><span class="pill">Retainer</span><span class="pill">Weekly Milestones</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <div class="container section-inner">
+    <div class="eyebrow reveal">
+      <span class="eyebrow-line"></span>
+      <span class="eyebrow-text">Contact</span>
+    </div>
+    <h2 class="contact-heading reveal" style="transition-delay:80ms;margin-top:20px">
+      Have a product to ship?<span> Let's talk.</span>
+    </h2>
+    <p class="contact-sub reveal" style="transition-delay:160ms">
+      One Q4 slot remaining. Direct async collaboration with the engineer writing the code. No account managers, no agency overhead.
+    </p>
+    <div class="contact-actions reveal" style="transition-delay:240ms">
+      <button class="btn btn-primary" id="copy-btn-2" aria-label="Copy email to clipboard">
+        <svg id="copy-icon-2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span id="copy-text-2">Copy Email</span>
+      </button>
+      <a href="https://discord.gg/3FT5XyUJd" target="_blank" rel="noreferrer noopener" class="btn btn-secondary">
+        <span>Discord</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+      </a>
+    </div>
+    <footer class="footer reveal" style="transition-delay:320ms">
+      <div class="footer-links">
+        <a href="https://github.com/kurniawan-studio" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        </a>
+        <a href="https://discord.gg/3FT5XyUJd" target="_blank" rel="noreferrer noopener" aria-label="Discord">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"></circle><circle cx="15" cy="12" r="1"></circle><path d="M7.5 7.5C10 6 14 6 16.5 7.5m-9 9C10 18 14 18 16.5 16.5M7.5 7.5C6 10 5.5 14 6 16.5m10.5-9C18 10 18.5 14 18 16.5"></path></svg>
+        </a>
+        <a href="https://tiktok.com/@neokurniawansamenraaf" target="_blank" rel="noreferrer noopener" aria-label="TikTok">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+        </a>
+        <a href="https://www.youtube.com/@NeoKurniawanSamenRaaf" target="_blank" rel="noreferrer noopener" aria-label="YouTube">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+        </a>
+      </div>
+      <p class="copyright">Built with precision — © <span id="year"></span> Neo Kurniawan Samen</p>
+    </footer>
+  </div>
+</section>
+
+<script>
+(function(){
+  'use strict';
+  var EMAIL = "neoawandev@gmail.com";
+
+  // Live clock WITA
+  var clock = document.getElementById('clock');
+  function tick(){
+    try{
+      var t = new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Makassar',hour:'2-digit',minute:'2-digit',hour12:false});
+      clock.textContent = t + ' WITA';
+    }catch(e){ clock.textContent = ''; }
+  }
+  tick(); setInterval(tick, 30000);
+
+  // Nav scroll
+  var nav = document.getElementById('nav');
+  function onScroll(){ nav.classList.toggle('scrolled', window.scrollY > 8); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  // Copy email
+  function copyEmail(btn, textEl, iconEl, originalText){
+    var done = function(){
+      textEl.textContent = 'Copied ✓';
+      if(btn.classList.contains('btn-secondary')) btn.classList.add('copied');
+      iconEl.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+      iconEl.setAttribute('stroke-width','2.5');
+      setTimeout(function(){
+        textEl.textContent = originalText;
+        btn.classList.remove('copied');
+        iconEl.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>';
+      }, 2000);
+    };
+    function fallback(cb){
+      var ta = document.createElement('textarea');
+      ta.value = EMAIL; ta.style.position='fixed'; ta.style.opacity='0'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(ta); cb();
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(EMAIL).then(done).catch(function(){ fallback(done); });
+    } else { fallback(done); }
+  }
+
+  var cb1 = document.getElementById('copy-btn');
+  if(cb1){
+    cb1.addEventListener('click', function(){
+      copyEmail(cb1, document.getElementById('copy-text'), document.getElementById('copy-icon'), EMAIL);
+    });
+  }
+  var cb2 = document.getElementById('copy-btn-2');
+  if(cb2){
+    cb2.addEventListener('click', function(){
+      copyEmail(cb2, document.getElementById('copy-text-2'), document.getElementById('copy-icon-2'), 'Copy Email');
+    });
+  }
+
+  // Reveal on scroll
+  var els = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, {threshold:0.1, rootMargin:'0px 0px -60px 0px'});
+    els.forEach(function(el){ io.observe(el); });
+  } else { els.forEach(function(el){ el.classList.add('visible'); }); }
+
+  // Spotlight hover
+  document.querySelectorAll('.card, .cap-card').forEach(function(card){
+    card.addEventListener('mousemove', function(e){
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
